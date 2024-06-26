@@ -35,28 +35,76 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title"><%= comment.username %></h5>
-                        <p class="card-text"><%= comment.content %></p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                <%= new Date(comment.createdAt).toLocaleDateString('pt-BR', {
-                                    day: '2-digit',
-                                    month: 'long',
-                                    year: 'numeric'
-                                }) %> às 
-                                <%= new Date(comment.createdAt).toLocaleTimeString('pt-BR', {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                }) %>
-                            </small>
-                        </p>
+                        <div class="comment-content">
+                            <p class="card-text"><%= comment.content %></p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <%= new Date(comment.createdAt).toLocaleDateString('pt-BR', {
+                                        day: '2-digit',
+                                        month: 'long',
+                                        year: 'numeric'
+                                    }) %> às 
+                                    <%= new Date(comment.createdAt).toLocaleTimeString('pt-BR', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    }) %>
+                                    <% if (comment.edited) { %>
+                                        (editado)
+                                    <% } %>
+                                </small>
+                            </p>
+                        </div>
                         <% if (comment.username === username) { %>
-                            <form action="/comments/<%= comment.id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-primary btn-sm edit-comment-btn">Editar</button>
+                            <form action="/comments/<%= comment.id %>?_method=DELETE" method="POST" style="display: inline;">
                                 <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                            <!-- Formulário de Edição (inicialmente oculto) -->
+                            <form action="/comments/<%= comment.id %>?_method=PUT" method="POST" class="edit-comment-form" style="display: none;">
+                                <input type="hidden" name="_method" value="PUT">
+                                <div class="mb-3">
+                                    <textarea class="form-control" name="content" rows="3"><%= comment.content %></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+                                <button type="button" class="btn btn-secondary btn-sm cancel-edit-btn">Cancelar</button>
                             </form>
                         <% } %>
                     </div>
                 </div>
             <% }) %>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const editButtons = document.querySelectorAll('.edit-comment-btn');
+                    
+                    editButtons.forEach(button => {
+                        button.addEventListener('click', function(event) {
+                            const cardBody = button.closest('.card-body');
+                            const editForm = cardBody.querySelector('.edit-comment-form');
+                            const commentContent = cardBody.querySelector('.comment-content');
+                            
+                            // Esconder texto do comentário e mostrar formulário de edição
+                            commentContent.style.display = 'none';
+                            editForm.style.display = 'block';
+                        });
+                    });
+            
+                    const cancelButtons = document.querySelectorAll('.cancel-edit-btn');
+                    
+                    cancelButtons.forEach(button => {
+                        button.addEventListener('click', function(event) {
+                            const cardBody = button.closest('.card-body');
+                            const editForm = cardBody.querySelector('.edit-comment-form');
+                            const commentContent = cardBody.querySelector('.comment-content');
+                            
+                            // Esconder formulário de edição e reexibir texto do comentário
+                            commentContent.style.display = 'block';
+                            editForm.style.display = 'none';
+                        });
+                    });
+                });
+            </script>            
+            
         </div>
     </div>
 

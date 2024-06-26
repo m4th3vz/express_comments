@@ -29,6 +29,10 @@ const Comment = sequelize.define('Comment', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  edited: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false  // Por padrão, o comentário não foi editado
+  },
   createdAt: {
     type: DataTypes.DATE,
     defaultValue: Sequelize.NOW
