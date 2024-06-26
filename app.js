@@ -1,7 +1,10 @@
+// app.js
+
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 const app = express();
 const port = 3000;
@@ -19,6 +22,10 @@ app.use(session({
   cookie: { secure: false }
 }));
 
+// Configuração do method-override
+app.use(methodOverride('_method'));
+
+// Rotas
 const indexRoutes = require('./routes/index');
 const commentsRoutes = require('./routes/comments');
 const authRoutes = require('./routes/auth');

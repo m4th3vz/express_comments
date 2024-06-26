@@ -30,6 +30,7 @@
         </form>
 
         <div class="mt-5">
+            <!-- Dentro do loop que exibe os comentários -->
             <% comments.forEach(comment => { %>
                 <div class="card mb-3">
                     <div class="card-body">
@@ -48,6 +49,11 @@
                                 }) %>
                             </small>
                         </p>
+                        <% if (comment.username === username) { %>
+                            <form action="/comments/<%= comment.id %>?_method=DELETE" method="POST">
+                                <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                            </form>
+                        <% } %>
                     </div>
                 </div>
             <% }) %>
